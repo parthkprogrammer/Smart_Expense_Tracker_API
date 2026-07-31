@@ -5,6 +5,7 @@ import com.expense.tracker.model.Expense;
 import com.expense.tracker.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -61,20 +62,29 @@ public class ExpenseService {
     }
 
     /**
+     * Filters expenses by category and/or date range (bonus feature).
+     *
+     * @param category The category name to filter by (optional).
+     * @param startDate The start date of the range (inclusive, optional).
+     * @param endDate The end date of the range (inclusive, optional).
+     * @return A list of matching expenses.
+     */
+    public List<Expense> getExpensesFiltered(String category, LocalDate startDate, LocalDate endDate) {
+        return expenseRepository.findAll().stream()
+                .filter(expense -> category == null || category.trim().isEmpty() || expense.getCategory().equalsIgnoreCase(category.trim()))
+                .filter(expense -> startDate == null || !expense.getDate().isBefore(startDate))
+                .filter(expense -> endDate == null || !expense.getDate().isAfter(endDate))
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Filters expenses by their category (case-insensitive search).
      *
      * @param category The category name to filter by.
      * @return A list of expenses matching the specified category.
      */
     public List<Expense> getExpensesByCategory(String category) {
-        if (category == null || category.trim().isEmpty()) {
-            return getAllExpenses();
-        }
-        
-        String trimmedCategory = category.trim();
-        return expenseRepository.findAll().stream()
-                .filter(expense -> expense.getCategory().equalsIgnoreCase(trimmedCategory))
-                .collect(Collectors.toList());
+        return getExpensesFiltered(category, null, null);
     }
 
     /**

@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,20 +41,20 @@ public class ExpenseController {
     }
 
     /**
-     * GET /expenses (with optional ?category=Category filter)
-     * Retrieves all expenses or filters them by a specific category.
+     * GET /expenses (with optional ?category=Category, ?startDate=YYYY-MM-DD, ?endDate=YYYY-MM-DD filters)
+     * Retrieves all expenses or filters them by a category and/or date range (bonus feature).
      *
      * @param category The category name to filter by (optional).
+     * @param startDate The start date of the range (inclusive, optional).
+     * @param endDate The end date of the range (inclusive, optional).
      * @return A list of matching expenses and HTTP status 200 (OK).
      */
     @GetMapping
-    public ResponseEntity<List<Expense>> getExpenses(@RequestParam(required = false) String category) {
-        List<Expense> expenses;
-        if (category != null && !category.trim().isEmpty()) {
-            expenses = expenseService.getExpensesByCategory(category);
-        } else {
-            expenses = expenseService.getAllExpenses();
-        }
+    public ResponseEntity<List<Expense>> getExpenses(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        List<Expense> expenses = expenseService.getExpensesFiltered(category, startDate, endDate);
         return ResponseEntity.ok(expenses);
     }
 

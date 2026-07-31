@@ -70,7 +70,7 @@ class ExpenseControllerTests {
 
     @Test
     void testGetExpenses_NoParams() throws Exception {
-        when(service.getAllExpenses()).thenReturn(Arrays.asList(validExpense));
+        when(service.getExpensesFiltered(null, null, null)).thenReturn(Arrays.asList(validExpense));
 
         mockMvc.perform(get("/expenses"))
                 .andExpect(status().isOk())
@@ -80,7 +80,7 @@ class ExpenseControllerTests {
 
     @Test
     void testGetExpenses_WithCategoryParam() throws Exception {
-        when(service.getExpensesByCategory("Entertainment")).thenReturn(Arrays.asList(validExpense));
+        when(service.getExpensesFiltered("Entertainment", null, null)).thenReturn(Arrays.asList(validExpense));
 
         mockMvc.perform(get("/expenses").param("category", "Entertainment"))
                 .andExpect(status().isOk())

@@ -129,6 +129,26 @@ class ExpenseTrackerTests {
     }
 
     /**
+     * Test: Date range filter (Bonus Feature)
+     * Verifies that the ?startDate= and ?endDate= query parameters filter expenses correctly by date range.
+     */
+    @Test
+    void testDateRangeFilter() throws Exception {
+        LocalDate today = LocalDate.now();
+        repository.save(new Expense(null, "Last Week Expense", 50.00, "Food", today.minusDays(7)));
+        repository.save(new Expense(null, "Today Expense", 10.00, "Food", today));
+        repository.save(new Expense(null, "Next Week Expense", 20.00, "Food", today.plusDays(7)));
+
+        // Filter for last 2 days (inclusive of today)
+        mockMvc.perform(get("/expenses")
+                        .param("startDate", today.minusDays(2).toString())
+                        .param("endDate", today.plusDays(2).toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].title").value("Today Expense"));
+    }
+
+    /**
      * 5. Test: Overall total
      * Verifies that GET /expenses/total correctly calculates the sum of all expenses.
      */
