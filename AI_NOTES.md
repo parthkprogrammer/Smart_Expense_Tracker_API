@@ -1,45 +1,78 @@
 # AI Generation and Implementation Notes
 
-This document describes the collaboration between the AI coding assistant and the engineer, detailing generated code, developer modifications, and rejected options.
+This project was developed with the assistance of an AI coding tool. I used AI as a development assistant to speed up implementation, but I reviewed, tested, and modified the generated code before including it in the final project.
 
----
+## 1. What the AI Assisted With
 
-## What the AI Generated
-1. **Maven Project Structure (`pom.xml`)**:
-   - Initialized Java 17 and Spring Boot 3.3.0 dependencies strictly limiting imports to Spring Web, Jakarta Validation, and Spring Boot Test.
-2. **Standard Packages**:
-   - Created packages for `controller`, `service`, `repository`, `model`, `exception`, and `config`.
-3. **Core API Elements**:
-   - **Model**: `Expense.java` domain model containing standard constructors, getters/setters, and Jakarta Bean Validation constraints (`@NotBlank`, `@Positive`, `@NotNull`, `@Size`).
-   - **Repository**: `ExpenseRepository.java` which manages data storage using a synchronized in-memory list and persists updates to `src/main/resources/expenses.json` using Jackson `ObjectMapper` + `JavaTimeModule` for native `LocalDate` support.
-   - **Service**: `ExpenseService.java` wrapping core business operations (add, list, delete, calculate totals) with custom business validation checking.
-   - **Controller**: `ExpenseController.java` mapping routing and validation annotations to the corresponding service layer.
-   - **Exception Mappings**: `GlobalExceptionHandler.java` translating runtime faults (`ResourceNotFoundException`, `IllegalArgumentException`, `MethodArgumentNotValidException`) into standard JSON response bodies.
-4. **Unit & Integration Tests**:
-   - Wrote isolated repository unit tests (`ExpenseRepositoryTests`), Mockito service unit tests (`ExpenseServiceTests`), MockMvc controller tests (`ExpenseControllerTests`), and full end-to-end integration tests (`ExpenseTrackerTests`).
+The AI helped generate the initial project structure and boilerplate code, including:
 
----
+* Maven project setup using Java 17 and Spring Boot 3
+* Basic package structure (`controller`, `service`, `repository`, `model`, `exception`, and `config`)
+* Initial `Expense` model with validation annotations
+* Initial implementations of the controller, service, and repository classes
+* Global exception handling structure
+* Initial unit and integration test templates
+* Swagger/OpenAPI configuration
 
-## What We Changed
-1. **Date Range Filter (Bonus Feature)**:
-   - Extended the `GET /expenses` endpoint to accept optional `startDate` and `endDate` query parameters. Filters expenses in-memory matching the range (inclusive) case-insensitively, and added related integration tests.
-2. **Unified Error Response Structure**:
-   - Updated the global error handlers to return consistent REST payload fields: `timestamp`, `status`, and `message`. Formatted JSR-380 validation binding errors to map fields directly within a structured `errors` dictionary.
-3. **Rebase & Git Conflict Resolution**:
-   - Resolved merge conflicts on `.gitignore` between the remote's template file and the local custom ignore patterns, preserving all IDE and Maven target directories.
-4. **Mock Stubbing Correction**:
-   - Updated the controller tests mock stubbing to mock `getExpensesFiltered()` instead of `getAllExpenses()` once the controller's implementation transitioned to the new filtering method.
-5. **Swagger UI / OpenAPI Documentation (Bonus Feature)**:
-   - Added `springdoc-openapi-starter-webmvc-ui` dependency to `pom.xml`, defined custom API info in `OpenApiConfig.java`, and fully documented all controller routes with annotations to allow developers to interact with the API via `/swagger-ui/index.html`.
+## 2. What I Reviewed, Tested, and Changed
 
----
+I reviewed all generated code and made several improvements before finalizing the project.
 
-## What We Rejected and Why
-1. **Lombok Dependency**:
-   - **Rejected**: Avoided Lombok annotations like `@Data` or `@NoArgsConstructor` because the requirement specified "Do not use Lombok." Written traditional getters, setters, and constructors to keep the code plain, clean, and developer-friendly.
-2. **Relational Database (H2 / SQLite / JPA)**:
-   - **Rejected**: Avoided integrating H2 in-memory DB or Spring Data JPA because the prompt specified "No database (use memory or local JSON file)." Used Jackson serialization to read and write records directly from/to `src/main/resources/expenses.json`.
-3. **Authentication & Security Starters**:
-   - **Rejected**: Kept Spring Security out of the project dependencies because the requirement strictly instructed "No authentication."
-4. **Over-engineered Architecture (e.g. MapStruct, DTO layers, CQRS)**:
-   - **Rejected**: Avoided mapping models to extra DTOs or using query command splitting to keep the code readable and maintainable for beginners, adhering to "do not over-engineer."
+### Business Logic
+
+* Verified that all required REST endpoints worked correctly.
+* Improved validation to ensure invalid expenses cannot be added.
+* Tested expense addition, deletion, filtering, and total calculations.
+
+### JSON Persistence
+
+* Verified that expenses are correctly loaded from and saved to the local JSON file.
+* Tested persistence after adding and deleting expenses.
+
+### Error Handling
+
+* Standardized API error responses to include:
+
+  * `timestamp`
+  * `status`
+  * `message`
+* Improved validation error messages to make them more meaningful.
+
+### Testing
+
+* Updated and corrected unit and integration tests.
+* Fixed mock configurations after service method changes.
+* Added tests for validation failures and filtering functionality.
+
+### Bonus Feature
+
+* Added Swagger/OpenAPI documentation so the API can be explored through the browser.
+
+## 3. AI Suggestions I Chose Not to Use
+
+### Lombok
+
+I did not use Lombok because the project requirements specified using plain Java classes with explicit constructors, getters, and setters.
+
+### Database Integration
+
+I rejected suggestions to use H2, JPA, or any relational database because the assignment explicitly allowed using in-memory storage or a local JSON file.
+
+### Spring Security
+
+I chose not to include authentication since it was outside the scope of the assignment and would have added unnecessary complexity.
+
+### Over-Engineered Design
+
+I avoided introducing DTOs, MapStruct, CQRS, or other advanced architectural patterns. For a project of this size, keeping the code simple and easy to understand was a better fit for the assignment requirements.
+
+## 4. Final Verification
+
+Before submission, I:
+
+* Built the project using Maven.
+* Ran the complete test suite.
+* Verified each REST endpoint using Swagger/Postman.
+* Confirmed that the JSON file persisted data correctly.
+* Reviewed the code for readability and consistency.
+* Ensured the project structure matched the submission requirements.
