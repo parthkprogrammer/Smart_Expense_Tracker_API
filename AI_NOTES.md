@@ -29,6 +29,8 @@ This document describes the collaboration between the AI coding assistant and th
    - Resolved merge conflicts on `.gitignore` between the remote's template file and the local custom ignore patterns, preserving all IDE and Maven target directories.
 4. **Mock Stubbing Correction**:
    - Updated the controller tests mock stubbing to mock `getExpensesFiltered()` instead of `getAllExpenses()` once the controller's implementation transitioned to the new filtering method.
+5. **Swagger UI / OpenAPI Documentation (Bonus Feature)**:
+   - Added `springdoc-openapi-starter-webmvc-ui` dependency to `pom.xml`, defined custom API info in `OpenApiConfig.java`, and fully documented all controller routes with annotations to allow developers to interact with the API via `/swagger-ui/index.html`.
 
 ---
 

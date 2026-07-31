@@ -56,7 +56,15 @@ mvn spring-boot:run
 The server will start on [http://localhost:8080](http://localhost:8080).
 
 ### 3. Run the Test Suite
-To execute all JUnit 5 unit and integration tests (29 tests):
+To execute all JUnit 5 unit and integration tests (30 tests):
 ```bash
 mvn test
 ```
+
+---
+
+## Swagger OpenAPI Documentation
+Once the application is running, you can access the interactive API docs at:
+- **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+- **OpenAPI JSON Docs**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+

@@ -2,6 +2,11 @@ package com.expense.tracker.controller;
 
 import com.expense.tracker.model.Expense;
 import com.expense.tracker.service.ExpenseService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +23,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/expenses")
 @Validated
+@Tag(name = "Expenses", description = "Operations related to managing tracker expenses")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
@@ -30,29 +36,33 @@ public class ExpenseController {
     /**
      * POST /expenses
      * Creates a new expense entry.
-     *
-     * @param expense The expense payload validated by @Valid annotations on the model.
-     * @return The created expense with HTTP status 201 (Created).
      */
     @PostMapping
+    @Operation(summary = "Create a new expense", description = "Saves a new expense and returns the saved object with its generated UUID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Expense successfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid request payload or validation constraints failed")
+    })
     public ResponseEntity<Expense> createExpense(@Valid @RequestBody Expense expense) {
         Expense created = expenseService.addExpense(expense);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     /**
-     * GET /expenses (with optional ?category=Category, ?startDate=YYYY-MM-DD, ?endDate=YYYY-MM-DD filters)
-     * Retrieves all expenses or filters them by a category and/or date range (bonus feature).
-     *
-     * @param category The category name to filter by (optional).
-     * @param startDate The start date of the range (inclusive, optional).
-     * @param endDate The end date of the range (inclusive, optional).
-     * @return A list of matching expenses and HTTP status 200 (OK).
+     * GET /expenses
+     * Retrieves all expenses or filters them by a category and/or date range.
      */
     @GetMapping
+    @Operation(summary = "Get all or filtered expenses", description = "Retrieves a list of all recorded expenses. Supports optional filtering by category name and/or date range.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved expenses list")
+    })
     public ResponseEntity<List<Expense>> getExpenses(
+            @Parameter(description = "Filter by category name (case-insensitive)")
             @RequestParam(required = false) String category,
+            @Parameter(description = "Filter by start date (inclusive, YYYY-MM-DD)")
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @Parameter(description = "Filter by end date (inclusive, YYYY-MM-DD)")
             @RequestParam(required = false) @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE) LocalDate endDate) {
         List<Expense> expenses = expenseService.getExpensesFiltered(category, startDate, endDate);
         return ResponseEntity.ok(expenses);
@@ -61,10 +71,12 @@ public class ExpenseController {
     /**
      * GET /expenses/total
      * Calculates the overall sum of all recorded expenses.
-     *
-     * @return The overall sum and HTTP status 200 (OK).
      */
     @GetMapping("/total")
+    @Operation(summary = "Calculate overall total", description = "Retrieves the sum of all recorded expenses in the tracker database.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully calculated total")
+    })
     public ResponseEntity<Double> getTotalAmount() {
         double total = expenseService.calculateTotal();
         return ResponseEntity.ok(total);
@@ -73,12 +85,15 @@ public class ExpenseController {
     /**
      * GET /expenses/total/{category}
      * Calculates the total sum of expenses matching a specific category.
-     *
-     * @param category The category name.
-     * @return The category total and HTTP status 200 (OK).
      */
     @GetMapping("/total/{category}")
-    public ResponseEntity<Double> getTotalAmountByCategory(@PathVariable String category) {
+    @Operation(summary = "Calculate total by category", description = "Retrieves the sum of expenses matching a specific category name (case-insensitive).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully calculated category total")
+    })
+    public ResponseEntity<Double> getTotalAmountByCategory(
+            @Parameter(description = "The category name to sum expenses for")
+            @PathVariable String category) {
         double total = expenseService.calculateTotalByCategory(category);
         return ResponseEntity.ok(total);
     }
@@ -86,12 +101,16 @@ public class ExpenseController {
     /**
      * DELETE /expenses/{id}
      * Deletes the expense associated with the given ID.
-     *
-     * @param id The UUID of the expense to delete.
-     * @return HTTP status 204 (No Content) upon successful deletion.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable UUID id) {
+    @Operation(summary = "Delete an expense", description = "Removes the expense record with the specified UUID from the database.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Expense successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "Expense with the specified ID was not found")
+    })
+    public ResponseEntity<Void> deleteExpense(
+            @Parameter(description = "The UUID of the expense to be deleted")
+            @PathVariable UUID id) {
         expenseService.deleteExpense(id);
         return ResponseEntity.noContent().build();
     }
