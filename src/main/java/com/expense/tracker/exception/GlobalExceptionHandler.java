@@ -19,14 +19,13 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     /**
-     * Handles cases where an expense is not found (returns 404 Not Found).
+     * Handles cases where any resource is not found (returns 404 Not Found).
      */
-    @ExceptionHandler(ExpenseNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ExpenseNotFoundException ex) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.NOT_FOUND.value());
-        body.put("error", "Not Found");
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
@@ -39,7 +38,6 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
@@ -52,7 +50,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.BAD_REQUEST.value());
-        body.put("error", "Validation Error");
+        body.put("message", "Validation failed");
         
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {

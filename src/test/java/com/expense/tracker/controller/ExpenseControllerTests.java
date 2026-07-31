@@ -61,7 +61,7 @@ class ExpenseControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidExpense)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.message").value("Validation failed"))
                 .andExpect(jsonPath("$.errors.title").exists())
                 .andExpect(jsonPath("$.errors.amount").exists())
                 .andExpect(jsonPath("$.errors.category").exists())
