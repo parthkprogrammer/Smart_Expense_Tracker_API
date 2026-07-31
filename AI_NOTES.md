@@ -1,78 +1,62 @@
 # AI Generation and Implementation Notes
 
-This project was developed with the assistance of an AI coding tool. I used AI as a development assistant to speed up implementation, but I reviewed, tested, and modified the generated code before including it in the final project.
+This project was developed with the assistance of AI tools. I used AI as a development assistant to speed up implementation, while reviewing, testing, and refining the generated code before including it in the final submission.
 
 ## 1. What the AI Assisted With
 
 The AI helped generate the initial project structure and boilerplate code, including:
 
 * Maven project setup using Java 17 and Spring Boot 3
-* Basic package structure (`controller`, `service`, `repository`, `model`, `exception`, and `config`)
-* Initial `Expense` model with validation annotations
-* Initial implementations of the controller, service, and repository classes
-* Global exception handling structure
+* Initial package structure (`controller`, `service`, `repository`, `model`, `exception`, and `config`)
+* Initial implementations of the model, repository, service, and controller
+* Global exception handling
 * Initial unit and integration test templates
 * Swagger/OpenAPI configuration
+* Documentation drafts for `README.md` and `AI_NOTES.md`
 
 ## 2. What I Reviewed, Tested, and Changed
 
-I reviewed all generated code and made several improvements before finalizing the project.
+After generating the initial implementation, I performed a final review of the entire project to improve code quality and readability without changing any functionality.
 
-### Business Logic
+During this review, I:
 
-* Verified that all required REST endpoints worked correctly.
-* Improved validation to ensure invalid expenses cannot be added.
-* Tested expense addition, deletion, filtering, and total calculations.
+* Removed unnecessary JavaDoc comments that only described obvious methods.
+* Removed redundant inline comments that repeated what the code already expressed.
+* Simplified the remaining comments so they only explain non-obvious logic.
+* Improved variable names to make the code more descriptive and easier to understand.
+* Simplified Swagger/OpenAPI annotations while preserving the endpoint documentation.
+* Shortened and clarified exception messages to make API responses more user-friendly.
+* Removed wording that sounded overly verbose or repetitive.
+* Cleaned up formatting and unnecessary blank lines to improve consistency.
+* Verified that these changes did not modify the API behavior, business logic, project structure, or test results.
 
-### JSON Persistence
-
-* Verified that expenses are correctly loaded from and saved to the local JSON file.
-* Tested persistence after adding and deleting expenses.
-
-### Error Handling
-
-* Standardized API error responses to include:
-
-  * `timestamp`
-  * `status`
-  * `message`
-* Improved validation error messages to make them more meaningful.
-
-### Testing
-
-* Updated and corrected unit and integration tests.
-* Fixed mock configurations after service method changes.
-* Added tests for validation failures and filtering functionality.
-
-### Bonus Feature
-
-* Added Swagger/OpenAPI documentation so the API can be explored through the browser.
+After completing these improvements, I rebuilt the project, ran the full test suite, and manually verified the REST endpoints to ensure the application behaved exactly as before.
 
 ## 3. AI Suggestions I Chose Not to Use
 
 ### Lombok
 
-I did not use Lombok because the project requirements specified using plain Java classes with explicit constructors, getters, and setters.
+I chose not to use Lombok because I wanted to keep the project in plain Java with explicit constructors, getters, and setters.
 
 ### Database Integration
 
-I rejected suggestions to use H2, JPA, or any relational database because the assignment explicitly allowed using in-memory storage or a local JSON file.
+I rejected suggestions to use H2, JPA, or any relational database because the assignment explicitly requested using in-memory storage or a local JSON file.
 
 ### Spring Security
 
-I chose not to include authentication since it was outside the scope of the assignment and would have added unnecessary complexity.
+I did not include authentication because it was outside the scope of the assignment.
 
-### Over-Engineered Design
+### Over-Engineered Architecture
 
-I avoided introducing DTOs, MapStruct, CQRS, or other advanced architectural patterns. For a project of this size, keeping the code simple and easy to understand was a better fit for the assignment requirements.
+I chose not to introduce DTOs, MapStruct, CQRS, or other advanced architectural patterns since they were unnecessary for the assignment and would have increased complexity.
 
 ## 4. Final Verification
 
 Before submission, I:
 
-* Built the project using Maven.
-* Ran the complete test suite.
-* Verified each REST endpoint using Swagger/Postman.
-* Confirmed that the JSON file persisted data correctly.
+* Built the project using `mvn clean install`.
+* Ran the complete test suite using `mvn test`.
+* Verified all REST endpoints using Swagger and Postman.
+* Confirmed JSON persistence worked correctly.
 * Reviewed the code for readability and consistency.
-* Ensured the project structure matched the submission requirements.
+* Ensured the repository structure matched the assignment requirements.

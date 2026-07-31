@@ -6,9 +6,7 @@ import io.swagger.v3.oas.models.info.Contact;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configuration class to customize the OpenAPI generation for Swagger UI.
- */
+// Configuration for OpenAPI / Swagger UI documentation
 @Configuration
 public class OpenApiConfig {
 
@@ -18,7 +16,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Smart Expense Tracker API")
                         .version("1.0.0")
-                        .description("Production-quality REST API documentation for the Smart Expense Tracker built with Spring Boot.")
+                        .description("REST API for tracking personal expenses")
                         .contact(new Contact()
                                 .name("Developer")
                                 .email("developer@example.com")));
