@@ -1,70 +1,169 @@
 # Smart Expense Tracker API
 
-A production-quality, clean, and beginner-friendly Java Spring Boot 3 REST API for tracking expenses, built using Java 17 and Maven.
+A REST API for managing personal expenses, built with **Java 17**, **Spring Boot 3**, and **Maven** as part of the **Diligent Software Engineering Apprenticeship 2026** assignment.
 
----
+## Tech Stack
 
-## Technical Stack
-- **Language**: Java 17
-- **Framework**: Spring Boot 3.3.0 (Spring Web, Validation)
-- **Build Tool**: Maven 3.x
-- **Database**: Local JSON File Database (`src/main/resources/expenses.json`)
-- **Testing**: JUnit 5, Mockito, Spring Boot Test (MockMvc)
+* **Language:** Java 17
+* **Framework:** Spring Boot 3.3.0
+* **Build Tool:** Maven
+* **Data Storage:** Local JSON file (`src/main/resources/expenses.json`)
+* **Testing:** JUnit 5, Mockito, Spring Boot Test (MockMvc)
+* **API Documentation (Bonus):** Swagger/OpenAPI
 
 ---
 
 ## Features
-- **Add Expense**: Create new expense entries with title, amount, category, and date.
-- **View All Expenses**: Retrieve all recorded expenses.
-- **Filter by Category**: Search and retrieve expenses belonging to a specific category (case-insensitive).
-- **Calculate Total**:
-  - Overall sum of all expenses.
-  - Category-specific sum of expenses (case-insensitive).
-- **Delete Expense**: Delete expense entries by ID (returns proper status codes or custom errors).
-- **Bonus Feature - Date Range Filter**: Retrieve expenses filtered by an optional inclusive start date and end date.
+
+* Add a new expense
+* View all expenses
+* Filter expenses by category (case-insensitive)
+* Calculate the total of all expenses
+* Calculate the total for a specific category
+* Delete an expense by ID
+
+### Bonus Feature
+
+* Filter expenses by an optional date range (`startDate` and `endDate`)
 
 ---
 
-## API Endpoints Reference
+## Project Structure
 
-| HTTP Method | Endpoint | Query Parameters | Description | Status Codes |
-| :--- | :--- | :--- | :--- | :--- |
-| **POST** | `/expenses` | None | Create a new expense. | `201 Created`, `400 Bad Request` |
-| **GET** | `/expenses` | `category`, `startDate`, `endDate` | Retrieve all expenses (supports category & date filtering). | `200 OK` |
-| **GET** | `/expenses/total` | None | Get the overall sum of all expenses. | `200 OK` |
-| **GET** | `/expenses/total/{category}` | None (category in path) | Get the total sum for a specific category. | `200 OK` |
-| **DELETE** | `/expenses/{id}` | None (UUID in path) | Delete an expense by ID. | `204 No Content`, `404 Not Found` |
+```text
+smart-expense-tracker-api/
+│── README.md
+│── AI_NOTES.md
+│── pom.xml
+│
+├── src/
+│   ├── main/
+│   └── test/
+│
+└── tests/
+```
 
 ---
 
-## Installation & Running Instructions
+## API Endpoints
 
-### Prerequisite
-Ensure you have **Java 17 (or newer)** and **Maven** installed and configured in your system path.
+| Method | Endpoint                     | Description                                                                         |
+| ------ | ---------------------------- | ----------------------------------------------------------------------------------- |
+| POST   | `/expenses`                  | Add a new expense                                                                   |
+| GET    | `/expenses`                  | Get all expenses (supports optional `category`, `startDate`, and `endDate` filters) |
+| GET    | `/expenses/total`            | Get the total of all expenses                                                       |
+| GET    | `/expenses/total/{category}` | Get the total for a specific category                                               |
+| DELETE | `/expenses/{id}`             | Delete an expense by its ID                                                         |
 
-### 1. Install & Build
-To clean the project and compile it from source, run the following command in the project root:
+---
+
+## Example Request
+
+### Create Expense
+
+**POST** `/expenses`
+
+```json
+{
+  "title": "Lunch",
+  "amount": 250,
+  "category": "Food",
+  "date": "2026-07-31"
+}
+```
+
+### Example Response
+
+```json
+{
+  "id": "4d6b8b2e-3f9d-4f3d-8d8a-9d58d1f0f9f2",
+  "title": "Lunch",
+  "amount": 250,
+  "category": "Food",
+  "date": "2026-07-31"
+}
+```
+
+---
+
+## Prerequisites
+
+Before running the project, ensure you have:
+
+* Java 17 or later
+* Maven 3.x
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd smart-expense-tracker-api
+```
+
+Install dependencies and build the project:
+
 ```bash
 mvn clean install
 ```
 
-### 2. Run the Application
-To run the Spring Boot dev server locally:
+---
+
+## Running the Application
+
+Start the application with:
+
 ```bash
 mvn spring-boot:run
 ```
-The server will start on [http://localhost:8080](http://localhost:8080).
 
-### 3. Run the Test Suite
-To execute all JUnit 5 unit and integration tests (30 tests):
+The application will run at:
+
+```
+http://localhost:8080
+```
+
+---
+
+## Running the Tests
+
+Execute the complete test suite:
+
 ```bash
 mvn test
 ```
 
 ---
 
-## Swagger OpenAPI Documentation
-Once the application is running, you can access the interactive API docs at:
-- **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-- **OpenAPI JSON Docs**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+## Swagger Documentation (Bonus)
 
+Once the application is running, open:
+
+* Swagger UI:
+  `http://localhost:8080/swagger-ui/index.html`
+
+* OpenAPI Specification:
+  `http://localhost:8080/v3/api-docs`
+
+---
+
+## Error Handling
+
+The API returns consistent JSON error responses containing:
+
+* `timestamp`
+* `status`
+* `message`
+
+Validation errors return appropriate HTTP status codes with descriptive messages.
+
+---
+
+## Notes
+
+* Data is stored in a local JSON file; no database is used.
+* The project follows a layered architecture with separate controller, service, repository, model, and exception packages.
+* The code is intentionally kept simple, readable, and easy to understand while following standard Spring Boot development practices.
